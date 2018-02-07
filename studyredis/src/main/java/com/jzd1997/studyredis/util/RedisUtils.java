@@ -21,6 +21,8 @@ import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -73,7 +75,7 @@ public class RedisUtils {
 
 	@PostConstruct
 	public void init() {
-		// RedisSerializer<String> stringSerializer = new StringRedisSerializer();
+		RedisSerializer<String> stringSerializer = new StringRedisSerializer();
 		// template.setKeySerializer(stringSerializer);
 		// template.setValueSerializer(stringSerializer);
 		// template.setHashKeySerializer(stringSerializer);
@@ -85,9 +87,9 @@ public class RedisUtils {
 		om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
 		om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
 		jackson2JsonRedisSerializer.setObjectMapper(om);
-		template.setKeySerializer(jackson2JsonRedisSerializer);
+		template.setKeySerializer(stringSerializer);
 		template.setValueSerializer(jackson2JsonRedisSerializer);
-		template.setHashKeySerializer(jackson2JsonRedisSerializer);
+		template.setHashKeySerializer(stringSerializer);
 		template.setHashValueSerializer(jackson2JsonRedisSerializer);
 		template.afterPropertiesSet();
 	}
